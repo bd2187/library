@@ -7,7 +7,50 @@
         <title>Document</title>
     </head>
     <body>
-        library
+        <form id="add-book-form" action="#">
+            <input
+                data-entry="name"
+                class="book-data add-book-form__name"
+                type="text"
+                placeholder="Name"
+                required
+            />
+            <input
+                data-entry="author"
+                class="book-data add-book-form__author"
+                type="text"
+                placeholder="Author"
+                required
+            />
+            <input
+                data-entry="pages"
+                class="book-data add-book-form__pages"
+                type="text"
+                placeholder="Pages"
+                required
+            />
+            <input
+                data-entry="bookID"
+                class="book-data add-book-form__id"
+                type="text"
+                placeholder="ID"
+                required
+            />
+            <p>
+                Read:
+                <input
+                    data-entry="didRead"
+                    class="book-data add-book-form__didRead"
+                    type="checkbox"
+                />
+            </p>
+
+            <input type="submit" />
+        </form>
+        <div>
+            <h1>Your library is empty</h1>
+            <ul id="books-list"></ul>
+        </div>
         <script src="./dist/app_bundle.js"></script>
     </body>
 </html>
