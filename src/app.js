@@ -41,7 +41,7 @@ const Library = {
         let filtered_library = [];
 
         for (let i = 0; i < App.library.length; i++) {
-            let book = this.library[i];
+            let book = App.library[i];
             if (book.id != id) filtered_library.push(book);
         }
 
@@ -62,6 +62,7 @@ const Library = {
                 break;
             }
         }
+        this.update_db();
     },
 
     /**
@@ -164,6 +165,40 @@ const Library_UI = {
         });
 
         Library.add_book(book_entries);
+        this.append_book(book_entries);
+    },
+
+    append_book: function append_book(book_entries = {}) {
+        var clonable_book_entry = document.getElementsByClassName(
+            "clonable-book-entry"
+        )[0];
+
+        let { id, name, author, pages, read } = book_entries;
+        var new_entry = clonable_book_entry.cloneNode(true);
+
+        new_entry.classList.remove("clonable-book-entry");
+        new_entry.setAttribute("data-id", id);
+        new_entry.getElementsByClassName("entry__name")[0].innerHTML = name;
+        new_entry.getElementsByClassName("entry__author")[0].innerHTML = author;
+        new_entry.getElementsByClassName("entry__pages")[0].innerHTML = pages;
+        new_entry.getElementsByClassName("entry__checked")[0].checked = read;
+        new_entry
+            .getElementsByClassName("entry__checked")[0]
+            .addEventListener("change", this.toggle_read.bind(this, id));
+        new_entry
+            .getElementsByClassName("entry__delete-btn")[0]
+            .addEventListener("click", this.delete_book.bind(this, id));
+
+        document.getElementById("books-list").appendChild(new_entry);
+    },
+
+    delete_book: function delete_book(id) {
+        Library.delete_book(id);
+        document.querySelectorAll(`[data-id="${id}"]`)[0].remove();
+    },
+
+    toggle_read: function toggle_read(id) {
+        Library.toggle_read(id);
     }
 };
 
@@ -176,23 +211,4 @@ const App = {
     }
 };
 
-// App.create_book({
-//     id: 123,
-//     name: "book name",
-//     author: "book author",
-//     pages: 300,
-//     read: false
-// });
-
-// App.create_book({
-//     id: 456,
-//     name: "book name",
-//     author: "book author",
-//     pages: 300,
-//     read: false
-// });
-
-// App.delete_book(456);
-
-// console.log(App.library);
 App.init();
