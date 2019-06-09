@@ -48,8 +48,22 @@
             <input type="submit" />
         </form>
         <div>
-            <h1>Your library is empty</h1>
-            <ul id="books-list"></ul>
+            <h1 class="empty-library-message" style="display: none">
+                Your library is empty
+            </h1>
+            <ul id="books-list">
+                <li
+                    data-id="0"
+                    class="clonable-book-entry book-list__entry entry"
+                    style="display: none"
+                >
+                    <input class="entry__checked" type="checkbox" />
+                    <h1 class="entry__name"></h1>
+                    <h1 class="entry__author"></h1>
+                    <h1 class="entry__pages"></h1>
+                    <button class="entry__delete-btn">Delete</button>
+                </li>
+            </ul>
         </div>
         <script src="./dist/app_bundle.js"></script>
     </body>
