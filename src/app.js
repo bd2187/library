@@ -6,13 +6,7 @@ const Book = function Book(id, name, author, pages, read) {
     this.read = read;
 };
 
-const App = {
-    library: [],
-    init: function init() {
-        let books_arr = this.fetch_books();
-        this.library = books_arr ? books_arr : [];
-    },
-
+const Library = {
     /**
      *  Creates a new book with Book.prototype
      *  @param Object book_info
@@ -32,7 +26,7 @@ const App = {
      *  @return
      */
     add_book: function add_book(book) {
-        this.library = [...this.library, book];
+        App.library = [...App.library, book];
         this.update_db();
     },
 
@@ -46,12 +40,12 @@ const App = {
     delete_book: function delete_book(id) {
         let filtered_library = [];
 
-        for (let i = 0; i < this.library.length; i++) {
+        for (let i = 0; i < App.library.length; i++) {
             let book = this.library[i];
             if (book.id != id) filtered_library.push(book);
         }
 
-        this.library = filtered_library;
+        App.library = filtered_library;
         this.update_db();
     },
 
@@ -61,8 +55,8 @@ const App = {
      *  @return
      */
     toggle_read: function toggle_read(id) {
-        for (let i = 0; i < this.library.length; i++) {
-            let book = this.library[i];
+        for (let i = 0; i < App.library.length; i++) {
+            let book = App.library[i];
             if (book.id === id) {
                 book.read = !book.read;
                 break;
@@ -96,9 +90,89 @@ const App = {
      */
     update_db: function update_db() {
         let books = {
-            user_books: this.library
+            user_books: App.library
         };
         localStorage.setItem("user_books", JSON.stringify(books));
+    }
+};
+
+const Library_UI = {
+    entry_types: {
+        NAME: "name",
+        AUTHOR: "author",
+        PAGES: "pages",
+        BOOK_ID: "bookid",
+        DID_READ: "didread"
+    },
+
+    init: function() {
+        this.handle_event_listeners();
+        this.populate_books();
+    },
+
+    populate_books: function() {
+        App.library;
+    },
+
+    handle_event_listeners: function handle_event_listeners() {
+        let add_book_form = document.getElementById("add-book-form");
+
+        add_book_form.addEventListener("submit", this.add_book.bind(this));
+    },
+
+    add_book: function add_book(evt) {
+        evt.preventDefault();
+        let book_inputs = [...document.getElementsByClassName("book-data")];
+        let book_entries = {};
+
+        book_inputs.forEach(input_el => {
+            let entry = input_el;
+            let entry_type = entry.getAttribute("data-entry").toLowerCase();
+
+            const { NAME, AUTHOR, PAGES, BOOK_ID, DID_READ } = this.entry_types;
+
+            switch (entry_type) {
+                case NAME:
+                    book_entries.name = entry.value;
+                    break;
+
+                case AUTHOR:
+                    book_entries.author = entry.value;
+                    break;
+
+                case PAGES:
+                    book_entries.pages = entry.value;
+                    break;
+
+                case BOOK_ID:
+                    book_entries.id = entry.value;
+                    break;
+
+                case DID_READ:
+                    book_entries.read = entry.checked;
+                    break;
+
+                default:
+                    break;
+            }
+
+            if (entry.type === "text") {
+                entry.value = "";
+            } else if (entry.type === "checkbox") {
+                entry.checked = false;
+            }
+        });
+
+        Library.add_book(book_entries);
+    }
+};
+
+const App = {
+    library: [],
+    init: function init() {
+        let books_arr = Library.fetch_books();
+        this.library = books_arr ? books_arr : [];
+        Library_UI.init();
     }
 };
 
@@ -121,4 +195,4 @@ const App = {
 // App.delete_book(456);
 
 // console.log(App.library);
-// App.init();
+App.init();
