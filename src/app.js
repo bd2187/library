@@ -1,15 +1,20 @@
-import Library from "./Library";
-import Library_UI from "./Library_UI";
+import library from "./Library";
+import library_ui from "./Library_UI";
 
-const App = {
-    library: [],
-    init: function init() {
-        let books_arr = Library.fetch_books();
-        this.library = books_arr ? books_arr : [];
-        Library_UI.init(this.library);
+class App {
+    constructor() {
+        this.library = [];
     }
-};
 
-App.init();
+    init() {
+        let books_arr = library.fetch_books();
+        this.library = books_arr ? books_arr : [];
+        library_ui.init(this.library);
+    }
+}
 
-export default App;
+const app = new App();
+
+app.init();
+
+export default app;

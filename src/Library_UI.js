@@ -1,14 +1,16 @@
-import Library from "./Library";
-import App from "./app";
+import library from "./Library";
+import app from "./app";
 
-const Library_UI = {
-    entry_types: {
-        NAME: "name",
-        AUTHOR: "author",
-        PAGES: "pages",
-        BOOK_ID: "bookid",
-        DID_READ: "didread"
-    },
+class Library_UI {
+    constructor() {
+        this.entry_types = {
+            NAME: "name",
+            AUTHOR: "author",
+            PAGES: "pages",
+            BOOK_ID: "bookid",
+            DID_READ: "didread"
+        };
+    }
 
     /**
      *  Adds event listener to #add-book-form and populates
@@ -16,12 +18,12 @@ const Library_UI = {
      *  @param Array library
      *  @return
      */
-    init: function(library) {
+    init(library) {
         let add_book_form = document.getElementById("add-book-form");
         add_book_form.addEventListener("submit", this.add_book.bind(this));
 
         this.populate_books(library);
-    },
+    }
 
     /**
      *  Iterates through the library array
@@ -29,13 +31,13 @@ const Library_UI = {
      *  @param Array library
      *  @return
      */
-    populate_books: function populate_books(library) {
+    populate_books(library) {
         for (let i = 0; i < library.length; i++) {
             this.append_book(library[i]);
         }
 
         this.show_empty_library(library.length);
-    },
+    }
 
     /**
      *  Determines if we should display the "Empty Library"
@@ -43,20 +45,20 @@ const Library_UI = {
      *  @param Number amount
      *  @return
      */
-    show_empty_library: function show_empty_library(amount) {
+    show_empty_library(amount) {
         var message = document.getElementsByClassName(
             "empty-library-message"
         )[0];
 
         message.style.display = amount > 0 ? "none" : "block";
-    },
+    }
 
     /**
      *  Adds a book to the library array
      *  @param Object evt
      *  @return
      */
-    add_book: function add_book(evt) {
+    add_book(evt) {
         evt.preventDefault();
         let book_inputs = [...document.getElementsByClassName("book-data")];
         let book_entries = {};
@@ -99,17 +101,17 @@ const Library_UI = {
             }
         });
 
-        Library.add_book(book_entries);
+        library.add_book(book_entries);
         this.append_book(book_entries);
-        this.show_empty_library(App.library.length);
-    },
+        this.show_empty_library(app.library.length);
+    }
 
     /**
      *  Appends book to UI
      *  @param Object book_entries
      *  @return
      */
-    append_book: function append_book(book_entries = {}) {
+    append_book(book_entries = {}) {
         var clonable_book_entry = document.getElementsByClassName(
             "clonable-book-entry"
         )[0];
@@ -132,27 +134,29 @@ const Library_UI = {
             .addEventListener("click", this.delete_book.bind(this, id));
 
         document.getElementById("books-list").appendChild(new_entry);
-    },
+    }
 
     /**
      *  Deletes book and removes the book from the UI
      *  @param Number id
      *  @return
      */
-    delete_book: function delete_book(id) {
-        Library.delete_book(id);
+    delete_book(id) {
+        library.delete_book(id);
         document.querySelectorAll(`[data-id="${id}"]`)[0].remove();
-        this.show_empty_library(App.library.length);
-    },
+        this.show_empty_library(app.library.length);
+    }
 
     /**
      *  Calls Library.toggle_read to toggle the "read"  boolean
      *  @param Number id
      *  @return
      */
-    toggle_read: function toggle_read(id) {
-        Library.toggle_read(id);
+    toggle_read(id) {
+        library.toggle_read(id);
     }
-};
+}
 
-export default Library_UI;
+const library_ui = new Library_UI();
+
+export default library_ui;

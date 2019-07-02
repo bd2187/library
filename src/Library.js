@@ -1,29 +1,29 @@
 import Book from "./Book";
-import App from "./app";
+import app from "./app";
 
-const Library = {
+class Library {
     /**
      *  Creates a new book with Book.prototype
      *  @param Object book_info
      *  @return
      */
-    create_book: function create_book(book_info = {}) {
+    create_book(book_info = {}) {
         let { id, name, author, pages, read } = book_info;
 
         let book = new Book(id, name, author, pages, read);
 
         this.add_book(book);
-    },
+    }
 
     /**
      *  Adds book to library
      *  @param Object book
      *  @return
      */
-    add_book: function add_book(book) {
-        App.library = [...App.library, book];
+    add_book(book) {
+        app.library = [...app.library, book];
         this.update_db();
-    },
+    }
 
     /**
      *  Deletes book by iterating through
@@ -32,40 +32,40 @@ const Library = {
      *  @param Number id
      *  @return
      */
-    delete_book: function delete_book(id) {
+    delete_book(id) {
         let filtered_library = [];
 
-        for (let i = 0; i < App.library.length; i++) {
-            let book = App.library[i];
+        for (let i = 0; i < app.library.length; i++) {
+            let book = app.library[i];
             if (book.id != id) filtered_library.push(book);
         }
 
-        App.library = filtered_library;
+        app.library = filtered_library;
         this.update_db();
-    },
+    }
 
     /**
      *  Toggles boolean value of book.read
      *  @param Number id
      *  @return
      */
-    toggle_read: function toggle_read(id) {
-        for (let i = 0; i < App.library.length; i++) {
-            let book = App.library[i];
+    toggle_read(id) {
+        for (let i = 0; i < app.library.length; i++) {
+            let book = app.library[i];
             if (book.id === id) {
                 book.read = !book.read;
                 break;
             }
         }
         this.update_db();
-    },
+    }
 
     /**
      *  Fetches array of books from local storage
      *  @param
      *  @return Array (if user_books is found) or null )if user_books is not found
      */
-    fetch_books: function fetch_books() {
+    fetch_books() {
         let user_books = localStorage.getItem("user_books");
 
         if (user_books) {
@@ -77,19 +77,21 @@ const Library = {
         } else {
             return null;
         }
-    },
+    }
 
     /**
      *  Saves library in local storage
      *  @param
      *  @return
      */
-    update_db: function update_db() {
+    update_db() {
         let books = {
-            user_books: App.library
+            user_books: app.library
         };
         localStorage.setItem("user_books", JSON.stringify(books));
     }
-};
+}
 
-export default Library;
+const library = new Library();
+
+export default library;
